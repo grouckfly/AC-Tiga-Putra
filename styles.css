@@ -498,7 +498,6 @@ body {
     border-radius: 20px;
     box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
     overflow: hidden; /* Penting untuk gambar dan border-radius */
-    position: relative; /* Untuk positioning experience-bar */
     display: flex; /* Menggunakan flexbox untuk menumpuk elemen secara vertikal */
     flex-direction: column;
 }
@@ -567,33 +566,6 @@ body {
     text-align: center;
 }
 
-/* --- Bagian 'Tahun Pengalaman' yang baru --- */
-.experience-bar {
-    background: rgba(0, 0, 0, 0.2); /* Latar belakang agak gelap, transparan */
-    padding: 15px 25px;
-    display: flex; /* Menggunakan flexbox untuk menata angka dan teks */
-    justify-content: space-between; /* Angka kiri, teks kanan */
-    align-items: center;
-    color: white;
-    border-radius: 0 0 20px 20px; /* Hanya sudut bawah yang melengkung */
-    position: relative; /* Penting untuk z-index jika ada overlay lain */
-    z-index: 4; /* Pastikan di atas overlay gambar */
-}
-
-.experience-bar .stat-number {
-    font-size: 2.8rem; /* Ukuran angka lebih kecil agar pas di bar */
-    font-weight: bold;
-    margin: 0; /* Hapus margin default */
-    color: white; /* Angka putih */
-}
-
-.experience-bar p {
-    font-size: 1.1rem; /* Ukuran teks lebih kecil */
-    margin: 0; /* Hapus margin default */
-    opacity: 1;
-    color: white; /* Teks putih */
-}
-
 /* Responsive Design untuk About Section */
 @media (max-width: 992px) { /* Adjust breakpoint if needed */
     .about-content {
@@ -616,12 +588,6 @@ body {
     }
     .stat-slide p {
         font-size: 1.2rem;
-    }
-    .experience-bar .stat-number {
-        font-size: 2.5rem;
-    }
-    .experience-bar p {
-        font-size: 1rem;
     }
 }
 
@@ -648,15 +614,6 @@ body {
     }
     .stat-slide p {
         font-size: 1rem;
-    }
-    .experience-bar {
-        padding: 10px 15px;
-    }
-    .experience-bar .stat-number {
-        font-size: 2rem;
-    }
-    .experience-bar p {
-        font-size: 0.9rem;
     }
 }
 
