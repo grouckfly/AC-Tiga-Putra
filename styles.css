@@ -374,6 +374,39 @@ body {
     font-weight: bold;
 }
 
+/* Menghilangkan tanda centang khusus untuk list item logo */
+.service-features .brand-logos-container {
+    padding-left: 0; /* Hapus padding default */
+    list-style-type: none; /* Hapus bullet point default */
+}
+
+.service-features .brand-logos-container::before {
+    content: none; /* Hapus pseudo-element (tanda centang) */
+}
+
+/* Wadah untuk barisan logo */
+.brand-logos {
+    display: flex;
+    justify-content: center; /* Posisi logo di tengah */
+    align-items: center;
+    gap: 15px; /* Jarak antar logo */
+    flex-wrap: wrap; /* Jika logo terlalu banyak, akan turun ke baris baru */
+    margin: 10px 0; /* Memberi sedikit jarak vertikal */
+}
+
+/* Styling untuk setiap gambar logo */
+.brand-logos img {
+    height: 50px; /* Menetapkan tinggi yang seragam untuk semua logo */
+    width: auto; /* Lebar akan menyesuaikan secara otomatis */
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+/* Efek saat kursor mouse di atas logo */
+.brand-logos img:hover {
+    transform: scale(1.2);
+}
+
 /* About Section */
 .about {
     padding: 100px 0;
