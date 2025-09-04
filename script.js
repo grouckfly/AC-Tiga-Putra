@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initMobileMenu();
     initAOSAnimations();
+    auto_stat_slider();
 
     document.getElementById('year').textContent = new Date().getFullYear();
 });
@@ -467,6 +468,31 @@ function throttle(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+function auto_stat_slider(){
+    const sliderWrapper = document.querySelector('.stat-slider-wrapper');
+        const slides = document.querySelectorAll('.stat-slide');
+        
+        // Cek jika elemen slider ada di halaman
+        if (sliderWrapper && slides.length > 0) {
+            const slideHeight = slides[0].clientHeight; // Mengambil tinggi satu slide secara dinamis
+            let currentIndex = 0;
+
+            setInterval(() => {
+                // Pindah ke slide berikutnya
+                currentIndex++;
+
+                // Jika sudah di slide terakhir, kembali ke awal
+                if (currentIndex >= slides.length) {
+                    currentIndex = 0;
+                }
+
+                // Geser wrapper ke atas sejauh tinggi slide dikali indeks slide saat ini
+                sliderWrapper.style.transform = `translateY(-${currentIndex * slideHeight}px)`;
+
+            }, 3000); // Ganti slide setiap 3000 milidetik (3 detik)
+        }
 }
 
 // Apply throttling to scroll events
