@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "Live Preview",
+			"workspacePath": "d:\\Bangun Web\\Web-Pukky",
+			"problemMatcher": [],
+			"label": "Live Preview: Run Server"
+		}
+	]
+}

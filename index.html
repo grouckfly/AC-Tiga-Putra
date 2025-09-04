@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC Tiga Putra - Service AC Profesional</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-snowflake"></i>
+                <span>AC Tiga Putra</span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link">Beranda</a></li>
+                <li><a href="#services" class="nav-link">Layanan</a></li>
+                <li><a href="#about" class="nav-link">Tentang</a></li>
+                <li><a href="#contact" class="nav-link">Kontak</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Service AC Terpercaya</h1>
+                <p class="hero-subtitle">Solusi lengkap untuk semua kebutuhan AC Anda dengan teknisi berpengalaman</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('contact')">
+                        <i class="fas fa-phone"></i> Hubungi Sekarang
+                    </button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('services')">
+                        <i class="fas fa-tools"></i> Lihat Layanan
+                    </button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="ac-illustration">
+                    <i class="fas fa-wind"></i>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Layanan Kami</h2>
+                <p>Dapatkan pelayanan terbaik untuk semua kebutuhan AC Anda</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <h3>Service AC</h3>
+                    <p>Perawatan rutin dan perbaikan AC untuk performa optimal</p>
+                    <ul class="service-features">
+                        <li>Pembersihan filter</li>
+                        <li>Pengecekan freon</li>
+                        <li>Tune up sistem</li>
+                    </ul>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Instalasi AC</h3>
+                    <p>Pemasangan AC baru dengan standar profesional</p>
+                    <ul class="service-features">
+                        <li>Instalasi berkualitas</li>
+                        <li>Garansi pemasangan</li>
+                    </ul>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-icon">
+                        <i class="fas fa-thermometer-half"></i>
+                    </div>
+                    <h3>Isi Freon</h3>
+                    <p>Pengisian freon berkualitas untuk cooling maksimal</p>
+                    <ul class="service-features">
+                        <li>Freon original</li>
+                        <li>Pengecekan kebocoran</li>
+                        <li>Harga kompetitif</li>
+                    </ul>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Maintenance</h3>
+                    <p>Program perawatan berkala untuk umur AC yang panjang</p>
+                    <ul class="service-features">
+                        <li>Jadwal rutin</li>
+                        <li>Preventive maintenance</li>
+                        <li>Dokumentasi lengkap</li>
+                    </ul>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>Jual / Beli AC</h3>
+                    <p>Jual / Beli AC dengan harga terjangkau dan kualitas terbaik</p>
+                    <ul class="service-features">
+                        <li>Harga terjangkau</li>
+                        <li>Bergaransi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text" data-aos="fade-right">
+                    <h2>Mengapa Memilih Kami?</h2>
+                    <p>Dengan pengalaman lebih dari 10 tahun dalam industri AC, kami telah melayani ribuan pelanggan
+                        dengan kepuasan maksimal.</p>
+
+                    <div class="features">
+                        <div class="feature-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Layanan 24/7</h4>
+                                <p>Siap melayani kapan saja Anda membutuhkan</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-user-tie"></i>
+                            <div>
+                                <h4>Teknisi Bersertifikat</h4>
+                                <p>Tim ahli dengan sertifikasi resmi</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-medal"></i>
+                            <div>
+                                <h4>Garansi Resmi</h4>
+                                <p>Jaminan kualitas untuk setiap pekerjaan</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-dollar-sign"></i>
+                            <div>
+                                <h4>Harga Kompetitif</h4>
+                                <p>Tarif terjangkau dengan kualitas premium</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-stats" data-aos="fade-left">
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-count="1000">0</h3>
+                        <p>Pelanggan Puas</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-count="10">0</h3>
+                        <p>Tahun Pengalaman</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-count="24">0</h3>
+                        <p>Jam Layanan</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-count="50">0</h3>
+                        <p>Teknisi Ahli</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Hubungi Kami</h2>
+                <p>Kami siap melayani Anda</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info" data-aos="fade-right">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Telepon</h4>
+                            <p>0857-4596-4659</p>
+                            <p>0821-4012-4881</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>Pukky@email.com</p>
+                            <p>Pukky2@email.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Alamat</h4>
+                            <p>Jl. Jalan<br>Sidoarjo</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Jam Operasional</h4>
+                            <p>09:00 - 17:00 WIB<br>Senin - Sabtu</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form" data-aos="fade-left">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Nama Lengkap" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" placeholder="Nomor Telepon" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <select id="service" name="service" required>
+                                <option value="">Pilih Layanan</option>
+                                <option value="service">Service AC</option>
+                                <option value="instalasi">Instalasi AC</option>
+                                <option value="freon">Isi Freon</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="emergency">Emergency Call</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" rows="4"
+                                placeholder="Deskripsi masalah atau kebutuhan Anda"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-snowflake"></i>
+                        <span>AC Tiga Putra</span>
+                    </div>
+                    <p>Solusi terpercaya untuk semua kebutuhan AC Anda dengan layanan profesional dan berkualitas
+                        tinggi.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Layanan</h4>
+                    <ul>
+                        <li><a href="#services">Service AC</a></li>
+                        <li><a href="#services">Instalasi AC</a></li>
+                        <li><a href="#services">Isi Freon</a></li>
+                        <li><a href="#services">Maintenance</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Kontak</h4>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 0857-4596-4659</li>
+                        <li><i class="fas fa-phone"></i> 0821-4012-4881</li>
+                        <li><i class="fas fa-envelope"></i> Pukky@email.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Sidoarjo</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="year"></span> AC Tiga Putra. Semua Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
