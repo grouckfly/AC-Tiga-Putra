@@ -105,6 +105,7 @@
                     <ul class="service-features">
                         <li>Jadwal rutin</li>
                         <li>Preventive maintenance</li>
+                        <li>Cuci AC</li>
                     </ul>
                 </div>
                 <div class="service-card" data-aos="fade-up" data-aos-delay="100">
@@ -222,8 +223,8 @@
                         <i class="fas fa-phone"></i>
                         <div>
                             <h4>Telepon</h4>
+                            <p>0823-2459-8530</p>
                             <p>0857-4596-4659</p>
-                            <p>0821-4012-4881</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -252,32 +253,33 @@
                 <div class="contact-form" data-aos="fade-left">
                     <form id="contactForm">
                         <div class="form-group">
+                            <label for="name" class="sr-only">Nama Lengkap</label>
                             <input type="text" id="name" name="name" placeholder="Nama Lengkap" required>
                         </div>
+                
                         <div class="form-group">
-                            <input type="tel" id="phone" name="phone" placeholder="Nomor Telepon" required>
+                            <label for="phone" class="sr-only">Nomor Telepon</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Nomor Telepon" required inputmode="numeric"
+                                pattern="[0-9]{10,15}" title="Harap masukkan 10 hingga 15 digit nomor telepon.">
                         </div>
+                
                         <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Email">
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Email (Opsional)">
                         </div>
+                
                         <div class="form-group">
-                            <select id="service" name="service" required>
-                                <option value="">Pilih Layanan</option>
-                                <option value="service">Service AC</option>
-                                <option value="instalasi">Instalasi AC</option>
-                                <option value="freon">Isi Freon</option>
-                                <option value="maintenance">Maintenance</option>
-                                <option value="emergency">Emergency Call</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" name="message" rows="4"
+                            <label for="message" class="sr-only">Deskripsi masalah atau kebutuhan Anda</label>
+                            <textarea id="message" name="message" rows="4" required
                                 placeholder="Deskripsi masalah atau kebutuhan Anda"></textarea>
                         </div>
+                
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-paper-plane"></i>
                             Kirim Pesan
                         </button>
+                
+                        <div id="whatsapp-redirect" style="display: none; margin-top: 20px;"></div>
                     </form>
                 </div>
             </div>
@@ -314,8 +316,8 @@
                 <div class="footer-section">
                     <h4>Kontak</h4>
                     <ul>
+                        <li><i class="fas fa-phone"></i> 0823-2459-8530</li>
                         <li><i class="fas fa-phone"></i> 0857-4596-4659</li>
-                        <li><i class="fas fa-phone"></i> 0821-4012-4881</li>
                         <li><i class="fas fa-envelope"></i> Pukky@email.com</li>
                         <li><i class="fas fa-map-marker-alt"></i> Sidoarjo</li>
                     </ul>

@@ -13,6 +13,18 @@ document.addEventListener('DOMContentLoaded', function() {
     initAOSAnimations();
     auto_stat_slider();
 
+    // Service card hover effect
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
     document.getElementById('year').textContent = new Date().getFullYear();
 });
 
@@ -143,92 +155,121 @@ function initBackToTop() {
 
 // Contact form handling
 function initContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(contactForm);
-            const data = {
-                name: formData.get('name'),
-                phone: formData.get('phone'),
-                email: formData.get('email'),
-                service: formData.get('service'),
-                message: formData.get('message')
-            };
-            
-            // Basic validation
-            if (!data.name || !data.phone || !data.service) {
-                showNotification('Mohon lengkapi semua field yang diperlukan!', 'error');
-                return;
-            }
-            
-            // Phone validation
-            if (!isValidPhone(data.phone)) {
-                showNotification('Format nomor telepon tidak valid!', 'error');
-                return;
-            }
-            
-            // Email validation (if provided)
-            if (data.email && !isValidEmail(data.email)) {
-                showNotification('Format email tidak valid!', 'error');
-                return;
-            }
-            
-            // Simulate form submission
-            submitContactForm(data);
-        });
-    }
+    const form = document.getElementById('contactForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 1. Validasi form
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        // 2. Tampilkan status loading PADA TOMBOL
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+        submitBtn.disabled = true;
+
+        // 3. Kumpulkan data dari form
+        const formData = new FormData(form);
+        const data = {
+            name: formData.get('name'),
+            phone: formData.get('phone'),
+            email: formData.get('email'),
+            message: formData.get('message')
+        };
+
+        // 4. Buat URL WhatsApp (logika "bulletproof" dipindah ke sini)
+        const phoneNumber = '6285745964659';
+        const cleanName = data.name ? data.name.trim() : 'Tidak diisi';
+        const cleanPhone = data.phone ? data.phone.trim() : 'Tidak diisi';
+        const cleanEmail = data.email ? data.email.trim() : 'Tidak diisi';
+        const cleanMessage = data.message ? data.message.trim() : 'Tidak ada pesan tambahan';
+
+        const messageParts = [
+            "Halo, saya ingin konsultasi tentang layanan AC.",
+            "",
+            "*Detail Pengirim:*",
+            `- Nama: ${cleanName}`,
+            `- Telepon: ${cleanPhone}`,
+            `- Email: ${cleanEmail}`,
+            `- Pesan: ${cleanMessage}`
+        ];
+        const encodedMessage = encodeURIComponent(messageParts.join('\n'));
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+        // 5. Buka WhatsApp SEKARANG JUGA
+        // Karena ini langsung dieksekusi setelah event 'submit', browser tidak akan memblokirnya.
+        window.open(whatsappUrl, '_blank');
+
+        // 6. Atur jeda singkat HANYA untuk reset UI (tombol dan form)
+        setTimeout(() => {
+            showNotification('Pesan Anda telah dialihkan ke WhatsApp!', 'success');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            form.reset();
+        }, 800); // Jeda singkat 0.8 detik
+    });
 }
 
 // Form submission simulation
 function submitContactForm(data) {
-    // Show loading state
     const submitBtn = document.querySelector('#contactForm button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
     submitBtn.disabled = true;
-    
-    // Simulate API call
+
+    // Simulasi proses pengiriman
     setTimeout(() => {
-        // Reset button
+        // Kembalikan tombol ke kondisi semula
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
         
-        // Show success message
-        showNotification('Pesan Anda berhasil dikirim! Kami akan menghubungi Anda segera.', 'success');
+        // Tampilkan notifikasi sukses
+        showNotification('Pesan Anda berhasil terkirim!', 'success');
         
-        // Reset form
+        // Kosongkan kolom formulir
         document.getElementById('contactForm').reset();
         
-        // Generate WhatsApp link (optional)
+        // Panggil fungsi untuk membuat dan menampilkan link WhatsApp
         generateWhatsAppLink(data);
-        
-    }, 2000);
+
+    }, 1000);
 }
 
 // Generate WhatsApp link
 function generateWhatsAppLink(data) {
-    const phoneNumber = '6281234567890'; // Replace with actual WhatsApp number
-    const message = `Halo, saya ingin konsultasi tentang layanan AC.
+    // GANTI DENGAN NOMOR WHATSAPP ANDA YANG BENAR
+    const phoneNumber = '6285745964659'; 
 
-Detail:
-- Nama: ${data.name}
-- Telepon: ${data.phone}
-- Email: ${data.email || 'Tidak disebutkan'}
-- Layanan: ${data.service}
-- Pesan: ${data.message || 'Tidak ada pesan tambahan'}`;
-    
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    
-    // Show option to continue via WhatsApp
-    setTimeout(() => {
-        if (confirm('Ingin melanjutkan konsultasi via WhatsApp?')) {
-            window.open(whatsappUrl, '_blank');
-        }
-    }, 3000);
+    // 1. Bersihkan setiap input dari spasi yang tidak perlu
+    const cleanName = data.name ? data.name.trim() : 'Tidak diisi';
+    const cleanPhone = data.phone ? data.phone.trim() : 'Tidak diisi';
+    const cleanEmail = data.email ? data.email.trim() : 'Tidak diisi';
+    const cleanMessage = data.message ? data.message.trim() : 'Tidak ada pesan tambahan';
+
+    // 2. Buat pesan dari array untuk format yang paling konsisten
+    const messageParts = [
+        "Halo, saya ingin konsultasi tentang layanan AC.",
+        "", // Baris kosong
+        "*Detail Pengirim:*",
+        `- Nama: ${cleanName}`,
+        `- Telepon: ${cleanPhone}`,
+        `- Email: ${cleanEmail}`,
+        `- Pesan: ${cleanMessage}`
+    ];
+
+    // 3. Gabungkan dan encode pesan
+    const encodedMessage = encodeURIComponent(messageParts.join('\n'));
+
+    // 4. Buat URL final
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // 5. LANGSUNG BUKA URL DI TAB BARU
+    window.open(whatsappUrl, '_blank');
 }
 
 // Validation functions
@@ -402,21 +443,6 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Service card hover effects
-document.addEventListener('DOMContentLoaded', function() {
-    const serviceCards = document.querySelectorAll('.service-card');
-    
-    serviceCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-});
-
 // Loading screen (optional)
 window.addEventListener('load', function() {
     document.body.classList.add('loaded');
@@ -427,34 +453,6 @@ window.addEventListener('load', function() {
         section.style.animationDelay = `${index * 0.1}s`;
         section.classList.add('loading');
     });
-});
-
-// Keyboard navigation support
-document.addEventListener('keydown', function(e) {
-    // Press 'H' to go to home
-    if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey) {
-        scrollToSection('home');
-    }
-    
-    // Press 'S' to go to services
-    if (e.key.toLowerCase() === 's' && !e.ctrlKey && !e.altKey) {
-        scrollToSection('services');
-    }
-    
-    // Press 'C' to go to contact
-    if (e.key.toLowerCase() === 'c' && !e.ctrlKey && !e.altKey) {
-        scrollToSection('contact');
-    }
-    
-    // Press Escape to close mobile menu
-    if (e.key === 'Escape') {
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('nav-menu');
-        if (hamburger && navMenu) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
-    }
 });
 
 // Performance optimization: Throttle scroll events

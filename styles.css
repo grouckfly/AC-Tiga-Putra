@@ -703,6 +703,18 @@ body {
     box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
 }
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 .form-group {
     margin-bottom: 25px;
 }
