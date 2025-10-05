@@ -1,31 +1,24 @@
 // script.js
 
-// DOM Content Loaded Event Listener
+// DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all functions
     initNavbar();
-    initScrollAnimations();
-    initBackToTop();
-    initContactForm();
-    initStatCounters();
-    initSmoothScrolling();
     initMobileMenu();
-    initAOSAnimations();
-    auto_stat_slider();
-
-    // Service card hover effect
-    const serviceCards = document.querySelectorAll('.service-card');
-    serviceCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
+    initSmoothScrolling();
+    initBackToTop();
+    initVerticalSlider();
+    initStatCounter();
+    initContactForm();
+    initFooterYear();
+    
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        offset: 100
     });
-
-    document.getElementById('year').textContent = new Date().getFullYear();
 });
 
 // Navbar functionality
@@ -94,8 +87,7 @@ function initMobileMenu() {
 
 // Smooth scrolling functionality
 function initSmoothScrolling() {
-    const navLinks = document.querySelectorAll('.nav-link');
-    const scrollIndicator = document.querySelector('.scroll-indicator');
+    const navLinks = document.querySelectorAll('.nav-link, .btn[href^="#"]');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -112,25 +104,6 @@ function initSmoothScrolling() {
             }
         });
     });
-    
-    // Scroll indicator click
-    if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', function() {
-            scrollToSection('services');
-        });
-    }
-}
-
-// Utility function for scrolling to sections
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        const offsetTop = section.offsetTop - 70;
-        window.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-        });
-    }
 }
 
 // Back to top button
@@ -153,134 +126,244 @@ function initBackToTop() {
     });
 }
 
-// Contact form handling
+// Vertical Image Slider
+function initVerticalSlider() {
+    const slider = document.getElementById('verticalSlider');
+    if (!slider) return;
+    
+    const slides = slider.querySelectorAll('.slide');
+    let currentSlide = 0;
+    
+    function showSlide(index) {
+        slides.forEach(slide => {
+            slide.classList.remove('active');
+        });
+        
+        slides[index].classList.add('active');
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    // Auto slide every 3 seconds
+    setInterval(nextSlide, 3000);
+    
+    // Initialize first slide
+    showSlide(0);
+}
+
+// Stat counter animation
+function initStatCounter() {
+    const statNumber = document.querySelector('.stat-number');
+    if (!statNumber) return;
+    
+    const target = parseInt(statNumber.getAttribute('data-count'));
+    let hasAnimated = false;
+    
+    function animateCounter() {
+        if (hasAnimated) return;
+        hasAnimated = true;
+        
+        let current = 0;
+        const increment = target / 100;
+        const duration = 2000;
+        const stepTime = duration / 100;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                statNumber.textContent = target;
+                clearInterval(timer);
+            } else {
+                statNumber.textContent = Math.floor(current);
+            }
+        }, stepTime);
+    }
+    
+    // Use Intersection Observer to trigger animation when visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter();
+            }
+        });
+    }, {
+        threshold: 0.5
+    });
+    
+    observer.observe(statNumber);
+}
+
+// Contact form submission with option to send via WhatsApp or Email
 function initContactForm() {
     const form = document.getElementById('contactForm');
     if (!form) return;
-
+    
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        // 1. Validasi form
+        
+        // Check form validity using built-in validation
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
         }
-
-        // 2. Tampilkan status loading PADA TOMBOL
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-        submitBtn.disabled = true;
-
-        // 3. Kumpulkan data dari form
-        const formData = new FormData(form);
-        const data = {
-            name: formData.get('name'),
-            phone: formData.get('phone'),
-            email: formData.get('email'),
-            message: formData.get('message')
+        
+        // Get form data
+        const formData = {
+            name: document.getElementById('name').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            message: document.getElementById('message').value.trim()
         };
-
-        // 4. Buat URL WhatsApp (logika "bulletproof" dipindah ke sini)
-        const phoneNumber = '6285745964659';
-        const cleanName = data.name ? data.name.trim() : 'Tidak diisi';
-        const cleanPhone = data.phone ? data.phone.trim() : 'Tidak diisi';
-        const cleanEmail = data.email ? data.email.trim() : 'Tidak diisi';
-        const cleanMessage = data.message ? data.message.trim() : 'Tidak ada pesan tambahan';
-
-        const messageParts = [
-            "Halo, saya ingin konsultasi tentang layanan AC.",
-            "",
-            "*Detail Pengirim:*",
-            `- Nama: ${cleanName}`,
-            `- Telepon: ${cleanPhone}`,
-            `- Email: ${cleanEmail}`,
-            `- Pesan: ${cleanMessage}`
-        ];
-        const encodedMessage = encodeURIComponent(messageParts.join('\n'));
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-        // 5. Buka WhatsApp SEKARANG JUGA
-        // Karena ini langsung dieksekusi setelah event 'submit', browser tidak akan memblokirnya.
-        window.open(whatsappUrl, '_blank');
-
-        // 6. Atur jeda singkat HANYA untuk reset UI (tombol dan form)
-        setTimeout(() => {
-            showNotification('Pesan Anda telah dialihkan ke WhatsApp!', 'success');
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            form.reset();
-        }, 800); // Jeda singkat 0.8 detik
+        
+        // Show send options modal
+        showSendOptionsModal(formData);
     });
 }
 
-// Form submission simulation
-function submitContactForm(data) {
-    const submitBtn = document.querySelector('#contactForm button[type="submit"]');
-    const originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-    submitBtn.disabled = true;
-
-    // Simulasi proses pengiriman
+// Show modal with send options
+function showSendOptionsModal(formData) {
+    // Remove existing modal if any
+    const existingModal = document.querySelector('.send-options-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'send-options-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pilih Metode Pengiriman</h3>
+                <p>Bagaimana Anda ingin mengirim pesan ini?</p>
+            </div>
+            <div class="send-options">
+                <button class="send-option-btn whatsapp" data-method="whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    <div class="option-text">
+                        <strong>WhatsApp</strong>
+                        <span>Kirim langsung via chat</span>
+                    </div>
+                </button>
+                <button class="send-option-btn email" data-method="email">
+                    <i class="fas fa-envelope"></i>
+                    <div class="option-text">
+                        <strong>Email</strong>
+                        <span>Kirim via email client</span>
+                    </div>
+                </button>
+            </div>
+            <button class="modal-cancel">Batal</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Show modal with animation
     setTimeout(() => {
-        // Kembalikan tombol ke kondisi semula
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-        
-        // Tampilkan notifikasi sukses
-        showNotification('Pesan Anda berhasil terkirim!', 'success');
-        
-        // Kosongkan kolom formulir
-        document.getElementById('contactForm').reset();
-        
-        // Panggil fungsi untuk membuat dan menampilkan link WhatsApp
-        generateWhatsAppLink(data);
+        modal.classList.add('active');
+    }, 10);
+    
+    // Handle WhatsApp option
+    modal.querySelector('.whatsapp').addEventListener('click', function() {
+        sendViaWhatsApp(formData);
+        closeModal(modal);
+    });
+    
+    // Handle Email option
+    modal.querySelector('.email').addEventListener('click', function() {
+        sendViaEmail(formData);
+        closeModal(modal);
+    });
+    
+    // Handle cancel
+    modal.querySelector('.modal-cancel').addEventListener('click', function() {
+        closeModal(modal);
+    });
+    
+    // Close on outside click
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal(modal);
+        }
+    });
+}
 
+// Send via WhatsApp
+function sendViaWhatsApp(formData) {
+    // Construct WhatsApp message
+    const messageLines = [
+        '=== PESAN DARI WEBSITE AC TIGA PUTRA ===',
+        '',
+        `Nama: ${formData.name}`,
+        `Telepon: ${formData.phone}`,
+        formData.email ? `Email: ${formData.email}` : '',
+        '',
+        'Pesan:',
+        formData.message,
+        '',
+        '================================'
+    ];
+    
+    const fullMessage = messageLines.filter(line => line !== '').join('\n');
+    const encodedMessage = encodeURIComponent(fullMessage);
+    
+    // Open WhatsApp with message
+    const whatsappUrl = `https://wa.me/6285745964659?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // Show success notification
+    showNotification('Membuka WhatsApp...', 'success');
+    
+    // Reset form after delay
+    setTimeout(() => {
+        document.getElementById('contactForm').reset();
     }, 1000);
 }
 
-// Generate WhatsApp link
-function generateWhatsAppLink(data) {
-    // GANTI DENGAN NOMOR WHATSAPP ANDA YANG BENAR
-    const phoneNumber = '6285745964659'; 
-
-    // 1. Bersihkan setiap input dari spasi yang tidak perlu
-    const cleanName = data.name ? data.name.trim() : 'Tidak diisi';
-    const cleanPhone = data.phone ? data.phone.trim() : 'Tidak diisi';
-    const cleanEmail = data.email ? data.email.trim() : 'Tidak diisi';
-    const cleanMessage = data.message ? data.message.trim() : 'Tidak ada pesan tambahan';
-
-    // 2. Buat pesan dari array untuk format yang paling konsisten
-    const messageParts = [
-        "Halo, saya ingin konsultasi tentang layanan AC.",
-        "", // Baris kosong
-        "*Detail Pengirim:*",
-        `- Nama: ${cleanName}`,
-        `- Telepon: ${cleanPhone}`,
-        `- Email: ${cleanEmail}`,
-        `- Pesan: ${cleanMessage}`
+// Send via Email
+function sendViaEmail(formData) {
+    // Construct email subject and body
+    const subject = encodeURIComponent('Pesan dari Website AC Tiga Putra');
+    
+    const bodyLines = [
+        'Pesan dari Website AC Tiga Putra',
+        '',
+        `Nama: ${formData.name}`,
+        `Telepon: ${formData.phone}`,
+        formData.email ? `Email: ${formData.email}` : '',
+        '',
+        'Pesan:',
+        formData.message,
+        '',
+        '---',
+        'Dikirim melalui formulir kontak website'
     ];
-
-    // 3. Gabungkan dan encode pesan
-    const encodedMessage = encodeURIComponent(messageParts.join('\n'));
-
-    // 4. Buat URL final
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-    // 5. LANGSUNG BUKA URL DI TAB BARU
-    window.open(whatsappUrl, '_blank');
+    
+    const body = encodeURIComponent(bodyLines.filter(line => line !== '').join('\n'));
+    
+    // Open email client
+    const mailtoUrl = `mailto:info@acTigaPutra.com?subject=${subject}&body=${body}`;
+    window.location.href = mailtoUrl;
+    
+    // Show success notification
+    showNotification('Membuka aplikasi email...', 'success');
+    
+    // Reset form after delay
+    setTimeout(() => {
+        document.getElementById('contactForm').reset();
+    }, 1000);
 }
 
-// Validation functions
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function isValidPhone(phone) {
-    const phoneRegex = /^(\+62|62|0)8[1-9][0-9]{6,9}$/;
-    return phoneRegex.test(phone.replace(/\s|-/g, ''));
+// Close modal with animation
+function closeModal(modal) {
+    modal.classList.remove('active');
+    setTimeout(() => {
+        modal.remove();
+    }, 300);
 }
 
 // Notification system
@@ -294,9 +377,22 @@ function showNotification(message, type = 'info') {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
+    
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        info: 'fa-info-circle'
+    };
+    
+    const colors = {
+        success: '#28a745',
+        error: '#dc3545',
+        info: '#007bff'
+    };
+    
     notification.innerHTML = `
         <div class="notification-content">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+            <i class="fas ${icons[type] || icons.info}"></i>
             <span>${message}</span>
         </div>
         <button class="notification-close" onclick="this.parentElement.remove()">
@@ -304,13 +400,13 @@ function showNotification(message, type = 'info') {
         </button>
     `;
     
-    // Add notification styles
+    // Style notification
     notification.style.cssText = `
         position: fixed;
         top: 100px;
         right: 20px;
         z-index: 10000;
-        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+        background: ${colors[type] || colors.info};
         color: white;
         padding: 15px 20px;
         border-radius: 10px;
@@ -323,6 +419,57 @@ function showNotification(message, type = 'info') {
         animation: slideInRight 0.3s ease;
     `;
     
+    // Add notification styles to page
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex: 1;
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+                padding: 5px;
+            }
+            
+            .notification-close:hover {
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
     document.body.appendChild(notification);
     
     // Auto remove after 5 seconds
@@ -334,125 +481,25 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Counter animation for statistics
-function initStatCounters() {
-    const counters = document.querySelectorAll('.stat-number');
-    let countersAnimated = false;
-    
-    function animateCounters() {
-        if (countersAnimated) return;
-        countersAnimated = true;
-        
-        counters.forEach(counter => {
-            const target = parseInt(counter.getAttribute('data-count'));
-            let current = 0;
-            const increment = target / 50; // Adjust speed
-            const duration = 2000; // 2 seconds
-            const stepTime = duration / 50;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    counter.textContent = target.toLocaleString();
-                    clearInterval(timer);
-                } else {
-                    counter.textContent = Math.floor(current).toLocaleString();
-                }
-            }, stepTime);
-        });
-    }
-    
-    // Trigger animation when stats section is visible
-    const statsSection = document.querySelector('.about-stats');
-    if (statsSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                }
-            });
-        }, {
-            threshold: 0.5
-        });
-        
-        observer.observe(statsSection);
+// Update footer year automatically
+function initFooterYear() {
+    const yearElement = document.getElementById('currentYear');
+    if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
     }
 }
 
-// Scroll animations
-function initScrollAnimations() {
-    // Add loading animation to elements
-    const animatedElements = document.querySelectorAll('.service-card, .feature-item, .contact-item');
-    
-    animatedElements.forEach((element, index) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(30px)';
-        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        element.style.transitionDelay = `${index * 0.1}s`;
-    });
-    
-    // Intersection Observer for scroll animations
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    });
-    
-    animatedElements.forEach(element => {
-        observer.observe(element);
-    });
-}
-
-// Simple AOS (Animate On Scroll) implementation
-function initAOSAnimations() {
-    const aosElements = document.querySelectorAll('[data-aos]');
-    
-    const aosObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('aos-animate');
-            } else {
-                entry.target.classList.remove('aos-animate');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    aosElements.forEach(element => {
-        aosObserver.observe(element);
-    });
-}
-
-// Parallax effect for hero section
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    const heroContent = document.querySelector('.hero-content');
-    
-    if (hero && heroContent) {
-        const rate = scrolled * -0.5;
-        heroContent.style.transform = `translateY(${rate}px)`;
+// Keyboard navigation support
+document.addEventListener('keydown', function(e) {
+    // Press Escape to close mobile menu
+    if (e.key === 'Escape') {
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        if (hamburger && navMenu) {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }
     }
-});
-
-// Loading screen (optional)
-window.addEventListener('load', function() {
-    document.body.classList.add('loaded');
-    
-    // Add stagger animation to main elements
-    const sections = document.querySelectorAll('section');
-    sections.forEach((section, index) => {
-        section.style.animationDelay = `${index * 0.1}s`;
-        section.classList.add('loading');
-    });
 });
 
 // Performance optimization: Throttle scroll events
@@ -468,82 +515,9 @@ function throttle(func, wait) {
     };
 }
 
-function auto_stat_slider(){
-    const sliderWrapper = document.querySelector('.stat-slider-wrapper');
-        const slides = document.querySelectorAll('.stat-slide');
-        
-        // Cek jika elemen slider ada di halaman
-        if (sliderWrapper && slides.length > 0) {
-            const slideHeight = slides[0].clientHeight; // Mengambil tinggi satu slide secara dinamis
-            let currentIndex = 0;
-
-            setInterval(() => {
-                // Pindah ke slide berikutnya
-                currentIndex++;
-
-                // Jika sudah di slide terakhir, kembali ke awal
-                if (currentIndex >= slides.length) {
-                    currentIndex = 0;
-                }
-
-                // Geser wrapper ke atas sejauh tinggi slide dikali indeks slide saat ini
-                sliderWrapper.style.transform = `translateY(-${currentIndex * slideHeight}px)`;
-
-            }, 3000); // Ganti slide setiap 3000 milidetik (3 detik)
-        }
-}
-
 // Apply throttling to scroll events
 const throttledScroll = throttle(() => {
-    // Scroll-dependent functions here
+    // Scroll-dependent functions are already handled individually
 }, 16); // ~60fps
 
 window.addEventListener('scroll', throttledScroll);
-
-// Add CSS animations dynamically
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .notification-content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex: 1;
-    }
-    
-    .notification-close {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        opacity: 0.7;
-        transition: opacity 0.3s ease;
-    }
-    
-    .notification-close:hover {
-        opacity: 1;
-    }
-`;
-
-document.head.appendChild(style);
